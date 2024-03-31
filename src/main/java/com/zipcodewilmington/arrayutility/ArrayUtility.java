@@ -7,10 +7,11 @@ import java.util.*;
  */
 
 // https://www.geeksforgeeks.org/array-class-in-java/
-// ARRAY UTILITY METHODS ^
+// GENERICS ARRAY METHODS ^
 
 public class ArrayUtility<T> { // generic class for array utility of type t elements
     private T[] inputArray; // input array
+
     public ArrayUtility(T[] inputArray) { // constructor to initialize the array to be used in methods
         this.inputArray = inputArray;
     }
@@ -27,27 +28,36 @@ public class ArrayUtility<T> { // generic class for array utility of type t elem
         return (int) (countInputArray + countMergeArray); // returning sum of both
     }
 
-    public T getMostCommonFromMerge(T[] arrayToMere) {
+    public T getMostCommonFromMerge(T[] arrayToMerge) {
 
+        // sorting elements by frequency using java map
         Map<T, Integer> frequencyMap = new HashMap<>();
 
+        // sorting elements to find more common from inputarray and arraytomerge
         Arrays.stream(inputArray).forEach(element -> frequencyMap.merge(element, 1, Integer::sum));
-        Arrays.stream(arrayToMere).forEach(element -> frequencyMap.merge(element, 1, Integer::sum));
+        Arrays.stream(arrayToMerge).forEach(element -> frequencyMap.merge(element, 1, Integer::sum));
 
-        return frequencyMap.entrySet().stream()
+        return frequencyMap.entrySet().stream() // returning most common aka element with high frequency
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
                 .orElse(null);
     }
 
-    public Integer getNumberOfOccurrences(T valueToEvaluate){
+    public Integer getNumberOfOccurrences(T valueToEvaluate) {
 
+        // using java stream to compare and count occurrences
         return (int) Arrays.stream(inputArray).filter(value -> value.equals(valueToEvaluate)).count();
     }
 
-    public T[] removeValue(T valueToRemove){
+    public T[] removeValue(T valueToRemove) {
+
+        // using java stream to compare and create a new array list to store value without valueToRemove
         T[] array = Arrays.stream(inputArray)
+
                 .filter(element -> !element.equals(valueToRemove))
+                .toArray(size -> (T[]) Array.newInstance(inputArray.getClass().getComponentType(), size));
+
+        return array;
     }
 }
 
