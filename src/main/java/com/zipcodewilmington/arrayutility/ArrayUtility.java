@@ -5,37 +5,51 @@ import java.util.*;
 /**
  * Created by leon on 3/6/18.
  */
-public class ArrayUtility<T> { // generic array setup
-    T[] inputArray; // inputArray with Type T elements
-    public ArrayUtility(T[] inputArray) { // constructor
+
+// https://www.geeksforgeeks.org/array-class-in-java/
+// ARRAY UTILITY METHODS ^
+
+public class ArrayUtility<T> { // generic class for array utility of type t elements
+    private T[] inputArray; // input array
+    public ArrayUtility(T[] inputArray) { // constructor to initialize the array to be used in methods
         this.inputArray = inputArray;
     }
 
+
     public Integer countDuplicatesInMerge(T[] arrayToMerge, T valueToEvaluate) {
-        int counter = 0;
-        List<T> arrayList = new ArrayList<>(Arrays.asList(inputArray));
-        arrayList.addAll(Arrays.asList(arrayToMerge));
 
-        for(int i = 0; i < arrayList.size(); i++){
-            if(arrayList.get(i).equals(valueToEvaluate)){
-                counter++;
-            }
-        }
-        return counter;
+        // counting duplicates in input array
+        long countInputArray = Arrays.stream(inputArray).filter(value -> value.equals(valueToEvaluate)).count();
+
+        // counting duplicates in merge array
+        long countMergeArray = Arrays.stream(arrayToMerge).filter(value -> value.equals(valueToEvaluate)).count();
+
+        return (int) (countInputArray + countMergeArray); // returning sum of both
     }
 
-    public Integer getNumberOfOccurrences(T valueToEvaluate) {
-        int counter = 0;
-        for(int i = 0; i < this.inputArray.length; i++){
-            if(this.inputArray[i] == valueToEvaluate){
-                counter++;
-            }
-        }
-        return counter;
+    public T getMostCommonFromMerge(T[] arrayToMere) {
+
+        Map<T, Integer> frequencyMap = new HashMap<>();
+
+        Arrays.stream(inputArray).forEach(element -> frequencyMap.merge(element, 1, Integer::sum));
+        Arrays.stream(arrayToMere).forEach(element -> frequencyMap.merge(element, 1, Integer::sum));
+
+        return frequencyMap.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
     }
 
+    public Integer getNumberOfOccurrences(T valueToEvaluate){
+
+        return (int) Arrays.stream(inputArray).filter(value -> value.equals(valueToEvaluate)).count();
+    }
+
+    public T[] removeValue(T valueToRemove){
+        T[] array = Arrays.stream(inputArray)
+                .filter(element -> !element.equals(valueToRemove))
+    }
 }
-
 
 
 
